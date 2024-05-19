@@ -1,0 +1,15 @@
+<service>
+    <id>robot_marking_designer</id>
+    <name>robot_marking_designer</name>
+    <description>robot_marking_designer service</description>
+    <!-- java环境变量 -->
+    <env name="JAVA_HOME" value="%JAVA_HOME%"/>
+    <env name="SPRING_APPLICATION_JSON" value='{}'/>
+    <executable>java</executable>
+    <arguments>-jar "app.jar"</arguments>
+    <!-- 开机启动 -->
+    <startmode>Automatic</startmode>
+    <!-- 日志配置 -->
+    <logpath>%BASE%\log</logpath>
+    <logmode>rotate</logmode>
+</service>
