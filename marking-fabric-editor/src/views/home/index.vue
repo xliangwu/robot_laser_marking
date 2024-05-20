@@ -31,7 +31,7 @@
         <div style="float: right">
           <!-- 预览 -->
           <previewCurrent />
-          <waterMark />
+          <!-- <waterMark /> -->
           <save></save>
           <lang></lang>
         </div>
@@ -224,12 +224,6 @@ const leftBar = ref([
     key: 'importSvgEl',
     name: t('material.cartoon'),
     icon: 'ios-leaf-outline',
-  },
-  {
-    // 图层
-    key: 'layer',
-    name: t('layers'),
-    icon: 'md-reorder',
   },
 ]);
 

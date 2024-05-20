@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!mixinState.mSelectMode">
+  <div v-if="!mixinState.mSelectMode" hidden>
     <Divider orientation="left" plain>{{ $t('color') }}</Divider>
     <Form :label-width="40">
       <FormItem :label="$t('color')" prop="name">

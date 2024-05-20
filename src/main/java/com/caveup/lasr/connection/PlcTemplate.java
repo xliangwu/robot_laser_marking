@@ -22,15 +22,17 @@ public class PlcTemplate {
     @Autowired
     private AppConfig appConfig;
 
-    public void writeInt(int val) {
+    public void writeInt(int db, int offset, int val) {
         S7Connector s7Connector = null;
         try {
             s7Connector = initConnect();
-            ByteBuffer buffer = ByteBuffer.allocate(4);
+            ByteBuffer buffer = ByteBuffer.allocate(2);
             buffer.putInt(val);
             byte[] data = new byte[4];
             buffer.get(data, 0, 4);
-            s7Connector.write(DaveArea.DB, 1000, 4, data);
+            log.info("before to write db:{},offset:{},data:{}", db, offset, val);
+            s7Connector.write(DaveArea.DB, db, offset, data);
+            log.info("finish to write db:{},offset:{},data:{}", db, offset, val);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {

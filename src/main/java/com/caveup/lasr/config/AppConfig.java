@@ -17,9 +17,14 @@ public class AppConfig {
     @Value("${plcHost:127.0.0.1}")
     private String plcHost;
 
-    @Value("${plcPort:102}")
+    @Value("${plcPort:502}")
     private Integer plcPort;
 
+    @Value("${floorOffset:0}")
+    private Integer floorOffset;
+
+    @Value("${dbNum:100}")
+    private Integer dbNum;
 
     @Value("${markingHost:127.0.0.1}")
     private String markingHost;

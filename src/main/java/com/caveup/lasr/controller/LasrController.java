@@ -10,6 +10,7 @@ import com.caveup.lasr.result.model.ApiResultModel;
 import com.caveup.lasr.util.Base64Helper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -41,18 +42,24 @@ public class LasrController {
     public ApiResultModel<Object> marking(@RequestParam(value = "requestId", required = false) String requestId,
                                           @RequestBody @Validated MarkingRequest markingParams,
                                           HttpServletRequest request) {
-        log.info("request:{},requestId:{},params:{}", request.getRequestURI(), request, markingParams);
+        log.info("request:{},requestId:{}", request.getRequestURI(), requestId);
         try {
             String imageData = markingParams.getImageData();
-            SimpleDateFormat dfm = new SimpleDateFormat("yyyyMMddHHmmss");
-            String label = dfm.format(new Date());
-            String fileName = label + ".png";
-            String outputName = appConfig.getMarkingRootDir() + File.separator + fileName;
+            SimpleDateFormat dfm = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat pidFmt = new SimpleDateFormat("yyyyMMddHHmmss");
+
+            Date now = new Date();
+            String label = dfm.format(now);
+            String fileName = pidFmt.format(now) + ".png";
+            String parentDir = appConfig.getMarkingRootDir() + File.separator + label;
+            FileUtils.createParentDirectories(new File(parentDir));
+            log.info("create parent folder:{}", parentDir);
+            String outputName = parentDir + File.separator + fileName;
             Base64Helper.base64ToFile(imageData, outputName);
             log.info("output name:{}", outputName);
-            boolean ret = tcpSocketTemplate.updateMarkingContent(fileName);
-            log.info("updateMarkingContent,output:{},status:{}", outputName, ret);
-            return ApiResultHelper.error(ret ? ApiStatusCode.SUCCESS : ApiStatusCode.MARKING_ERROR);
+
+            plcTemplate.writeInt(appConfig.getDbNum(), appConfig.getFloorOffset(), 1);
+            return ApiResultHelper.error(ApiStatusCode.SUCCESS);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
             return ApiResultHelper.error(ApiStatusCode.UNKNOWN_ERROR);
