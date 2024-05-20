@@ -26,8 +26,9 @@ public class PlcTemplate {
         S7Connector s7Connector = null;
         try {
             s7Connector = initConnect();
-            ByteBuffer buffer = ByteBuffer.allocate(2);
+            ByteBuffer buffer = ByteBuffer.allocate(4);
             buffer.putInt(val);
+            buffer.flip();
             byte[] data = new byte[4];
             buffer.get(data, 0, 4);
             log.info("before to write db:{},offset:{},data:{}", db, offset, val);
