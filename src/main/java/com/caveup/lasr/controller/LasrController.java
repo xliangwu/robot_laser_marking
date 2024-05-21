@@ -71,7 +71,7 @@ public class LasrController {
              * 监测V1802，如果是1，就开始打标。然后改成2，打标完成改成0
              */
             int v1 = Objects.isNull(markingParams.getProductIndex()) ? 1 : markingParams.getProductIndex();
-            plcTemplate.writeInt(appConfig.getProductAdd(), v1, appConfig.getStatusAdd(), 1);
+            plcTemplate.writeInt(appConfig.getProductAdd(), v1, appConfig.getStatusAdd(), 1, appConfig.getIndexAdd(), 1);
             int markingStatus = plcTemplate.readInt(appConfig.getStatusAdd());
             log.info("markingStatus:{}", markingStatus);
             return ApiResultHelper.success(ApiStatusCode.SUCCESS);

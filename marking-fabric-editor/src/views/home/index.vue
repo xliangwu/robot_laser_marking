@@ -18,12 +18,7 @@
         <myTemplName></myTemplName>
         <!-- 标尺开关 -->
         <Tooltip :content="$t('grid')">
-          <iSwitch
-            v-model="state.ruler"
-            @on-change="rulerSwitch"
-            size="small"
-            class="switch"
-          ></iSwitch>
+          <iSwitch v-model="state.ruler" @on-change="rulerSwitch" size="small" class="switch"></iSwitch>
         </Tooltip>
         <Divider type="vertical" />
         <history></history>
@@ -42,8 +37,8 @@
           <!-- 左侧菜单 -->
           <Menu :active-name="menuActive" accordion @on-select="showToolsBar" width="65px">
             <MenuItem v-for="item in leftBar" :key="item.key" :name="item.key" class="menu-item">
-              <Icon :type="item.icon" size="24" />
-              <div>{{ item.name }}</div>
+            <Icon :type="item.icon" size="24" />
+            <div>{{ item.name }}</div>
             </MenuItem>
           </Menu>
           <!-- 左侧组件 -->
@@ -55,10 +50,7 @@
             </div>
           </div>
           <!-- 关闭按钮 -->
-          <div
-            :class="`close-btn left-btn ${state.toolsBarShow && 'left-btn-open'}`"
-            @click="hideToolsBar"
-          ></div>
+          <div :class="`close-btn left-btn ${state.toolsBarShow && 'left-btn-open'}`" @click="hideToolsBar"></div>
         </div>
 
         <!-- 画布区域 -->
@@ -76,7 +68,7 @@
           <div v-if="state.show" style="padding-top: 10px">
             <element-data></element-data>
             <!-- 新增字体样式使用 -->
-            <Button @click="canvasEditor.getFontJson()" size="small">获取字体数据</Button>
+            <!-- <Button @click="canvasEditor.getFontJson()" size="small">获取字体数据</Button> -->
             <set-size></set-size>
             <bg-bar></bg-bar>
             <group></group>
@@ -98,10 +90,7 @@
           <attribute v-if="state.show"></attribute>
         </div>
         <!-- 右侧关闭按钮 -->
-        <div
-          :class="`close-btn right-btn ${state.attrBarShow && 'right-btn-open'}`"
-          @click="switchAttrBar"
-        ></div>
+        <div :class="`close-btn right-btn ${state.attrBarShow && 'right-btn-open'}`" @click="switchAttrBar"></div>
       </Content>
     </Layout>
   </div>
@@ -186,13 +175,13 @@ const state = reactive({
   menuActive: 1,
   show: false,
   toolsBarShow: true,
-  attrBarShow: true,
+  attrBarShow: false,
   select: null,
   ruler: true,
 });
 
 // 左侧菜单渲染
-const menuActive = ref('importTmpl');
+const menuActive = ref('importSvgEl');
 const leftBarComponent = {
   importTmpl,
   tools,

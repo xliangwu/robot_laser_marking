@@ -23,8 +23,17 @@ public class AppConfig {
     @Value("${statusAdd:V1802}")
     private String statusAdd;
 
+    /**
+     * 第几层
+     */
     @Value("${productAdd:V1800}")
     private String productAdd;
+
+    /**
+     * 当前层第几个种类
+     */
+    @Value("${productAdd:V1804}")
+    private String indexAdd;
 
     @Value("${markingHost:127.0.0.1}")
     private String markingHost;

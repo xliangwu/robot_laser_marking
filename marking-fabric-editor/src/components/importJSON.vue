@@ -7,7 +7,7 @@
 -->
 
 <template>
-  <div style="display: inline-block;padding-left:8px">
+  <div style="display: inline-block; padding-left: 8px">
     <Dropdown @on-click="clickHandler">
       <a href="javascript:void(0)">
         {{ $t('importFiles.file') }}
@@ -22,14 +22,12 @@
         </DropdownMenu>
       </template>
     </Dropdown>
+    <Divider type="vertical" />
+    <Button type="info" @click="createDesign">配置产品</Button>
 
     <!-- 创建设计 -->
     <!-- 修改尺寸 -->
-    <modalSzie
-      :title="$t('importFiles.createDesign.title')"
-      ref="modalSizeRef"
-      @set="customSizeCreate"
-    ></modalSzie>
+    <modalSzie :title="$t('importFiles.createDesign.title')" ref="modalSizeRef" @set="customSizeCreate"></modalSzie>
   </div>
 </template>
 
@@ -67,6 +65,7 @@ const customSizeCreate = async (w, h) => {
 h3 {
   margin-bottom: 10px;
 }
+
 .divider {
   margin-top: 0;
 }

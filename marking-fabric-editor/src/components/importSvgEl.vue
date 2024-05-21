@@ -22,37 +22,19 @@
           {{ item.label }}
         </Option>
       </Select>
-      <Input
-        class="input"
-        :placeholder="`在${typeText}中搜索`"
-        v-model="searchKeyWord"
-        search
-        :disabled="pageLoading"
-        @on-search="startGetList"
-      />
+      <Input class="input" :placeholder="`在${typeText}中搜索`" v-model="searchKeyWord" search :disabled="pageLoading"
+        @on-search="startGetList" />
     </div>
     <!-- 列表 -->
     <div style="height: calc(100vh - 108px)" id="myTemplBox1">
-      <Scroll
-        key="mysscroll2"
-        v-if="showScroll"
-        :on-reach-bottom="nextPage"
-        :height="scrollHeight"
-        :distance-to-edge="[-1, -1]"
-      >
+      <Scroll key="mysscroll2" v-if="showScroll" :on-reach-bottom="nextPage" :height="scrollHeight"
+        :distance-to-edge="[-1, -1]">
         <!-- 列表 -->
         <div class="img-group">
           <Tooltip :content="info.name" v-for="info in pageData" :key="info.src" placement="top">
             <div class="tmpl-img-box">
-              <Image
-                lazy
-                :src="info.src"
-                fit="contain"
-                height="100%"
-                :alt="info.name"
-                @click="addItem"
-                @dragend="dragItem"
-              />
+              <Image lazy :src="info.src" fit="contain" height="100%" :alt="info.name" @click="addItem"
+                @dragend="dragItem" />
             </div>
           </Tooltip>
         </div>
@@ -170,9 +152,11 @@ onMounted(async () => {
 .search-box {
   padding-top: 10px;
   display: flex;
+
   .input {
     margin-left: 10px;
   }
+
   .select {
     width: 100px;
   }
@@ -183,6 +167,7 @@ onMounted(async () => {
   border-radius: 10px;
   padding: 10px;
 }
+
 .tmpl-img-box {
   width: 67px;
   height: 100px;
