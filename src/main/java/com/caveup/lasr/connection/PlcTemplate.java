@@ -1,56 +1,75 @@
 package com.caveup.lasr.connection;
 
 import com.caveup.lasr.config.AppConfig;
-import com.github.s7connector.api.DaveArea;
-import com.github.s7connector.api.S7Connector;
-import com.github.s7connector.api.factory.S7ConnectorFactory;
+import com.github.xingshuangs.iot.protocol.s7.enums.EPlcType;
+import com.github.xingshuangs.iot.protocol.s7.service.S7PLC;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-
-import java.nio.ByteBuffer;
 
 /**
  * @author xw80329
  */
 @Component
 @Slf4j
-public class PlcTemplate {
+public class PlcTemplate implements InitializingBean {
 
     @Autowired
     private AppConfig appConfig;
 
-    public void writeInt(int db, int offset, int val) {
-        S7Connector s7Connector = null;
+    public void writeInt(String address, int val) {
         try {
-            s7Connector = initConnect();
-            ByteBuffer buffer = ByteBuffer.allocate(4);
-            buffer.putInt(val);
-            buffer.flip();
-            byte[] data = new byte[4];
-            buffer.get(data, 0, 4);
-            log.info("before to write db:{},offset:{},data:{}", db, offset, val);
-            s7Connector.write(DaveArea.DB, db, offset, data);
-            log.info("finish to write db:{},offset:{},data:{}", db, offset, val);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        } finally {
-            IOUtils.closeQuietly(s7Connector);
+            S7PLC s7Plc = new S7PLC(EPlcType.S1200, appConfig.getPlcHost());
+            s7Plc.setEnableReconnect(true);
+            s7Plc.setReceiveTimeout(1000);
+            s7Plc.writeInt16(address, (short) val);
+            int actualVal = s7Plc.readInt16(address);
+            s7Plc.close();
+            log.info("finish to write db:{},data:{},actual:{}", address, val, actualVal);
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
         }
     }
 
-    private S7Connector initConnect() {
+    public void writeInt(String a1, int val, String a2, int v2) {
+        try {
+            S7PLC s7Plc = new S7PLC(EPlcType.S1200, appConfig.getPlcHost());
+            s7Plc.setEnableReconnect(true);
+            s7Plc.setReceiveTimeout(1000);
+            s7Plc.writeInt16(a1, (short) val);
+            s7Plc.writeInt16(a2, (short) v2);
+            int actualA1 = s7Plc.readInt16(a1);
+            int actualA2 = s7Plc.readInt16(a2);
+            s7Plc.close();
+            log.info("finish to write db:{},data:{},actual:{}", a1, val, actualA1);
+            log.info("finish to write db:{},data:{},actual:{}", a2, v2, actualA2);
+
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+        }
+    }
+
+    public int readInt(String address) {
+        try {
+            S7PLC s7Plc = new S7PLC(EPlcType.S1200, appConfig.getPlcHost());
+            s7Plc.setEnableReconnect(true);
+            s7Plc.setReceiveTimeout(1000);
+            int status = s7Plc.readInt16(address);
+            s7Plc.close();
+            log.info("read data from address:{},data:{}", address, status);
+            return status;
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+        }
+
+        return -1;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
         Assert.notNull(appConfig.getPlcHost(), "Property 'plcHost' should be non-empty");
         Assert.notNull(appConfig.getPlcPort(), "Property 'plcPort' should be non-empty");
-        return S7ConnectorFactory
-                .buildTCPConnector()
-                .withHost(appConfig.getPlcHost())
-                .withPort(appConfig.getPlcPort())
-                .withTimeout(10000)
-                .withRack(0)
-                .withSlot(1)
-                .build();
     }
 }

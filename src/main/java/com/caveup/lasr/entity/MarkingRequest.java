@@ -11,4 +11,6 @@ public class MarkingRequest {
     private String imageData;
 
     private String type;
+
+    private Integer productIndex;
 }

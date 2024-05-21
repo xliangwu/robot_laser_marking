@@ -2,7 +2,6 @@ package com.caveup.lasr.controller;
 
 import com.caveup.lasr.config.AppConfig;
 import com.caveup.lasr.connection.PlcTemplate;
-import com.caveup.lasr.connection.TcpSocketTemplate;
 import com.caveup.lasr.entity.MarkingRequest;
 import com.caveup.lasr.result.ApiStatusCode;
 import com.caveup.lasr.result.helper.ApiResultHelper;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author xw80329
@@ -33,10 +33,19 @@ public class LasrController {
     private PlcTemplate plcTemplate;
 
     @Autowired
-    private TcpSocketTemplate tcpSocketTemplate;
-
-    @Autowired
     private AppConfig appConfig;
+
+    @GetMapping("/queryMarkingStatus")
+    public ApiResultModel<Object> marking(@RequestParam(value = "requestId", required = false) String requestId) {
+        try {
+            int markingStatus = plcTemplate.readInt(appConfig.getStatusAdd());
+            log.info("address:{},markingStatus:{}", appConfig.getStatusAdd(), markingStatus);
+            return ApiResultHelper.success(markingStatus);
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            return ApiResultHelper.error(ApiStatusCode.UNKNOWN_ERROR);
+        }
+    }
 
     @PostMapping("/marking")
     public ApiResultModel<Object> marking(@RequestParam(value = "requestId", required = false) String requestId,
@@ -58,8 +67,14 @@ public class LasrController {
             Base64Helper.base64ToFile(imageData, outputName);
             log.info("output name:{}", outputName);
 
-            plcTemplate.writeInt(appConfig.getDbNum(), appConfig.getFloorOffset(), 1);
-            return ApiResultHelper.error(ApiStatusCode.SUCCESS);
+            /**
+             * 监测V1802，如果是1，就开始打标。然后改成2，打标完成改成0
+             */
+            int v1 = Objects.isNull(markingParams.getProductIndex()) ? 1 : markingParams.getProductIndex();
+            plcTemplate.writeInt(appConfig.getProductAdd(), v1, appConfig.getStatusAdd(), 1);
+            int markingStatus = plcTemplate.readInt(appConfig.getStatusAdd());
+            log.info("markingStatus:{}", markingStatus);
+            return ApiResultHelper.success(ApiStatusCode.SUCCESS);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
             return ApiResultHelper.error(ApiStatusCode.UNKNOWN_ERROR);

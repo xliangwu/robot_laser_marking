@@ -14,17 +14,17 @@ import org.springframework.context.annotation.Configuration;
 
 public class AppConfig {
 
-    @Value("${plcHost:127.0.0.1}")
+    @Value("${plcHost:192.168.100.50}")
     private String plcHost;
 
-    @Value("${plcPort:502}")
+    @Value("${plcPort:102}")
     private Integer plcPort;
 
-    @Value("${floorOffset:0}")
-    private Integer floorOffset;
+    @Value("${statusAdd:V1802}")
+    private String statusAdd;
 
-    @Value("${dbNum:100}")
-    private Integer dbNum;
+    @Value("${productAdd:V1800}")
+    private String productAdd;
 
     @Value("${markingHost:127.0.0.1}")
     private String markingHost;
