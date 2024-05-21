@@ -73,7 +73,7 @@ class MaterialPlugin {
       },
     ]);
 
-    return axios.get(`${this.repoSrc}/api/templs?${queryParams}`).then((res: any) => {
+    return axios.get(`${this.repoSrc}/api/v1/templs?${queryParams}`).then((res: any) => {
       const list = res.data.data.map((item: any) => {
         return {
           name: item.attributes.name,
@@ -91,7 +91,7 @@ class MaterialPlugin {
    * @return {Promise<any>}
    */
   getMaterialTypeList() {
-    return axios.get(`${this.repoSrc}/api/material-types?pagination[pageSize]=100`).then((res) => {
+    return axios.get(`${this.repoSrc}/api/v1/material-types?pageSize=100`).then((res) => {
       const list = res.data.data.map((item: any) => {
         return {
           value: item.id,
@@ -132,7 +132,7 @@ class MaterialPlugin {
       },
     ]);
 
-    return axios.get(`${this.repoSrc}/api/materials?${queryParams}`).then((res: any) => {
+    return axios.get(`${this.repoSrc}/api/v1/materials?${queryParams}`).then((res: any) => {
       const list = res.data.data.map((item: any) => {
         return {
           name: item.attributes.name,
@@ -146,7 +146,7 @@ class MaterialPlugin {
   }
 
   getSizeList() {
-    return axios.get(`${this.repoSrc}/api/sizes?pagination[pageSize]=100`).then((res) => {
+    return axios.get(`${this.repoSrc}/api/v1/sizes?pageSize=100`).then((res) => {
       const list = res.data.data.map((item: any) => {
         return {
           value: item.id,
@@ -160,7 +160,7 @@ class MaterialPlugin {
     });
   }
   getFontList() {
-    return axios.get(`${this.repoSrc}/api/fonts?pagination[pageSize]=100`).then((res) => {
+    return axios.get(`${this.repoSrc}/api/v1/fonts?pageSize=100`).then((res) => {
       const list = res.data.data.map((item: any) => {
         return {
           value: item.id,

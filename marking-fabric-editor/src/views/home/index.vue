@@ -13,8 +13,8 @@
         <!-- 导入 -->
         <import-Json></import-Json>
         <Divider type="vertical" />
-        <import-file></import-file>
-        <Divider type="vertical" />
+        <!-- <import-file></import-file> -->
+        <!-- <Divider type="vertical" /> -->
         <myTemplName></myTemplName>
         <!-- 标尺开关 -->
         <Tooltip :content="$t('grid')">
@@ -33,7 +33,7 @@
           <previewCurrent />
           <!-- <waterMark /> -->
           <save></save>
-          <lang></lang>
+          <!-- <lang></lang> -->
         </div>
       </Header>
       <Content style="display: flex; height: calc(100vh - 64px)">
@@ -212,12 +212,6 @@ const leftBar = ref([
     key: 'tools',
     name: t('elements'),
     icon: 'md-images',
-  },
-  {
-    //字体样式
-    key: 'fontStyle',
-    name: t('font_style'),
-    icon: 'ios-pulse',
   },
   {
     // 图片元素

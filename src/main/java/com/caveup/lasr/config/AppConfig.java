@@ -34,4 +34,10 @@ public class AppConfig {
 
     @Value("${markingRootDir:/data}")
     private String markingRootDir;
+
+    @Value("${designerConfig:/data/laser/designer.json}")
+    private String designerConfig;
+
+    @Value("${materialRootDir:/data/laser/material}")
+    private String materialRootDir;
 }

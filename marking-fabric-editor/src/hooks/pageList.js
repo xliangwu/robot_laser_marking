@@ -11,10 +11,10 @@ import axios from 'axios';
 import qs from 'qs';
 
 // 分类API
-const typeApi = (url) => axios.get(`${repoSrc}/api/${url}?pagination[pageSize]=200`);
+const typeApi = (url) => axios.get(`${repoSrc}/api/v1/${url}?pageSize=200`);
 
 // 分页API
-const pageApi = (url, queryParams) => axios.get(`${repoSrc}/api/${url}?${queryParams}`);
+const pageApi = (url, queryParams) => axios.get(`${repoSrc}/api/v1/${url}?${queryParams}`);
 
 function getQueryParams(option, filters) {
   filters.forEach((item) => {

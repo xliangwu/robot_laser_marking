@@ -13,7 +13,12 @@
     <Button style="margin-left: 10px" type="text" @click="beforeClear">
       {{ $t('save.empty') }}
     </Button>
-    <Dropdown style="margin-left: 10px" @on-click="saveWith">
+
+    <Button style="margin-left: 10px;" type="primary" @click="saveUserDesignerImage">
+      {{ $t('save.copy_to_clipboardstr') }}
+    </Button>
+    
+    <!-- <Dropdown style="margin-left: 10px" @on-click="saveWith">
       <Button type="primary">
         {{ $t('save.down') }}
         <Icon type="ios-arrow-down"></Icon>
@@ -25,7 +30,7 @@
           <DropdownItem name="clipboardBase64">{{ $t('save.copy_to_clipboardstr') }}</DropdownItem>
         </DropdownMenu>
       </template>
-    </Dropdown>
+    </Dropdown> -->
   </div>
 </template>
 
@@ -107,6 +112,18 @@ const beforeClear = () => {
     cancelText: t('cancel'),
     onOk: () => clear(),
   });
+};
+
+const saveUserDesignerImage = () => {
+  // canvasEditor.clipboardBase64();
+  var callback = function (imageData, type) {
+    var request = {
+      imageData: imageData,
+      type: type,
+    };
+    startMarking(request);
+  };
+  canvasEditor.saveLocal(callback);
 };
 </script>
 

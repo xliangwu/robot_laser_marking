@@ -7,7 +7,7 @@
 -->
 
 <template>
-  <div style="display: inline-block">
+  <div style="display: inline-block;padding-left:8px">
     <Dropdown @on-click="clickHandler">
       <a href="javascript:void(0)">
         {{ $t('importFiles.file') }}
@@ -18,7 +18,7 @@
           <DropdownItem name="createDesign">
             {{ $t('importFiles.createDesign.title') }}
           </DropdownItem>
-          <DropdownItem name="importFiles">{{ $t('importFiles.importFiles') }}</DropdownItem>
+          <!-- <DropdownItem name="importFiles">{{ $t('importFiles.importFiles') }}</DropdownItem> -->
         </DropdownMenu>
       </template>
     </Dropdown>

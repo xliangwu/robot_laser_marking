@@ -29,6 +29,9 @@ public class ApiResultModel<T> extends ResultModel<T> {
      */
     private Integer code;
 
+
+    private Object meta;
+
     /**
      * 无参数构造方法
      */
@@ -93,5 +96,13 @@ public class ApiResultModel<T> extends ResultModel<T> {
         }
         stringBuilder.append("}");
         return stringBuilder.toString();
+    }
+
+    public void setMeta(Object meta) {
+        this.meta = meta;
+    }
+
+    public Object getMeta() {
+        return meta;
     }
 }

@@ -20,7 +20,7 @@
     <appender name="infoAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>app.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>barcode-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>app-%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>5</maxHistory>
         </rollingPolicy>
         <encoder charset="UTF-8">
