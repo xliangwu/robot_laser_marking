@@ -24,4 +24,11 @@ public class Pagination {
         this(1, total, 1, total);
     }
 
+    public Pagination(int pageSize, int total) {
+        int pageCount = total % pageSize == 0 ? total / pageSize : total / pageSize + 1;
+        this.page = 1;
+        this.pageSize = pageSize;
+        this.pageCount = pageCount;
+        this.total = total;
+    }
 }

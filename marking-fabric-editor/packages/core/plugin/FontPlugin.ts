@@ -50,7 +50,7 @@ class FontPlugin {
       return Promise.resolve(this.cacheList);
     }
     return axios
-      .get(`${this.repoSrc}/api/fonts?populate=*&pagination[pageSize]=100`)
+      .get(`${this.repoSrc}/api/v1/fonts?populate=*&pagination[pageSize]=100`)
       .then((res) => {
         const list = res.data.data.map((item: any) => {
           return {

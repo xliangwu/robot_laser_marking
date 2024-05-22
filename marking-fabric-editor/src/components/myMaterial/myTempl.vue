@@ -10,43 +10,21 @@
   <div>
     <!-- 搜索组件 -->
     <div class="search-box">
-      <Input
-        class="input"
-        placeholder="请输入关键词"
-        v-model="searchKeyword"
-        search
-        :disabled="loading"
-        @on-search="startGetMaterialList"
-      />
+      <Input class="input" placeholder="请输入关键词" v-model="searchKeyword" search :disabled="loading"
+        @on-search="startGetMaterialList" />
     </div>
 
     <!-- 列表 -->
     <div style="height: calc(100vh - 180px)" id="myFileTemplBox">
-      <Scroll
-        key="myFileTemplBox"
-        v-if="showScroll"
-        :on-reach-bottom="handleReachBottom"
-        :height="scrollHeight"
-        :distance-to-edge="[-1, -1]"
-      >
+      <Scroll key="myFileTemplBox" v-if="showScroll" :on-reach-bottom="handleReachBottom" :height="scrollHeight"
+        :distance-to-edge="[-1, -1]">
         <!-- 列表 -->
         <div>
-          <Tooltip
-            :content="info.name"
-            v-for="info in materialList"
-            :key="info.src"
-            placement="top"
-          >
+          <Tooltip :content="info.name" v-for="info in materialList" :key="info.src" placement="top">
             <div class="tmpl-img-box">
               <Icon type="ios-trash" class="del-btn" color="red" @click="removeTempl(info.id)" />
-              <Image
-                lazy
-                :src="info.src"
-                fit="contain"
-                height="100%"
-                :alt="info.name"
-                @click="beforeClearTip(info.json, info.id)"
-              />
+              <Image lazy :src="info.src" fit="contain" height="100%" :alt="info.name"
+                @click="beforeClearTip(info.json, info.id)" />
             </div>
           </Tooltip>
         </div>
@@ -104,12 +82,14 @@ const getMaterialList = () => {
     materialList.value = [...materialList.value, ...list];
     loading.value = false;
   });
+  console.log('*****');
 };
 
 const startGetMaterialList = () => {
   materialList.value = [];
   page.value = 1;
   getMaterialList();
+  console.log('*****');
 };
 
 const handleReachBottom = () => {
@@ -220,9 +200,11 @@ const removeTempl = (id) => {
   padding-top: 10px;
   padding-bottom: 10px;
   display: flex;
+
   .input {
     margin-left: 10px;
   }
+
   .select {
     width: 100px;
   }
@@ -233,6 +215,7 @@ const removeTempl = (id) => {
   border-radius: 10px;
   padding: 10px;
 }
+
 .tmpl-img-box {
   width: 140px;
   height: 180px;
@@ -243,6 +226,7 @@ const removeTempl = (id) => {
 
   &:hover {
     background: #e3e3e3;
+
     .del-btn {
       right: 5px;
     }

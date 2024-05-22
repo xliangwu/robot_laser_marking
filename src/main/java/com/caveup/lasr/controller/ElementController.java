@@ -2,6 +2,7 @@ package com.caveup.lasr.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.caveup.lasr.config.AppConfig;
+import com.caveup.lasr.constatns.Constants;
 import com.caveup.lasr.entity.*;
 import com.caveup.lasr.result.ApiStatusCode;
 import com.caveup.lasr.result.helper.ApiResultHelper;
@@ -10,6 +11,7 @@ import com.caveup.lasr.util.QueryUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -49,7 +51,7 @@ public class ElementController {
             String designerConfigContent = FileUtils.readFileToString(designerFile, "utf8");
             JSONArray data = JSONArray.parseArray(designerConfigContent);
             ApiResultModel<Object> apiResultModel = ApiResultHelper.success(data);
-            Pagination pagination = new Pagination(data.size());
+            Pagination pagination = new Pagination(Constants.DEFAULT_PAGE_SIZE, data.size());
             Map<String, Object> meta = new HashMap<>();
             meta.put("pagination", pagination);
             apiResultModel.setMeta(meta);
@@ -86,7 +88,7 @@ public class ElementController {
                 i++;
             }
             ApiResultModel<Object> apiResultModel = ApiResultHelper.success(materialTypeList);
-            Pagination pagination = new Pagination(materialTypeList.size());
+            Pagination pagination = new Pagination(Constants.DEFAULT_PAGE_SIZE, materialTypeList.size());
             Map<String, Object> meta = new HashMap<>();
             meta.put("pagination", pagination);
             apiResultModel.setMeta(meta);
@@ -126,15 +128,22 @@ public class ElementController {
             Map<String, String> params = QueryUtil.parse(request.getQueryString());
 
             AtomicReference<String> selectedType = new AtomicReference<>();
+            AtomicReference<String> keyword = new AtomicReference<>();
+
             selectedType.set("all");
             params.forEach((k, v) -> {
                 if (k.contains("material_type")) {
                     selectedType.set(v);
                 }
+
+                if (k.contains("name")) {
+                    keyword.set(v);
+                }
             });
 
             log.info("material_type:{}", selectedType.get());
             String categoryName = MATERIAL_MAP.getOrDefault(selectedType.get(), null);
+            String keywordStr = keyword.get();
             File materialFile = new File(appConfig.getMaterialRootDir());
             Collection<File> allImages = FileUtils.listFiles(materialFile, new String[]{"jpg", "png"}, true)
                     .stream()
@@ -152,6 +161,10 @@ public class ElementController {
                     continue;
                 }
 
+                if (StringUtils.isNotBlank(keywordStr) && !file.getName().contains(keywordStr)) {
+                    continue;
+                }
+
                 Material material = new Material();
                 material.setId(i + 1);
 
@@ -166,7 +179,7 @@ public class ElementController {
                 imgAttributes.setUpdatedAt(new Date());
                 imgAttributes.setPublishedAt(new Date());
                 materialDetail.setAttributes(imgAttributes);
-                materialDetail.setId(material.getId());
+                materialDetail.setId(material.getId() * 100);
 
                 Map<String, Object> img = new HashMap<>();
                 img.put("data", materialDetail);
@@ -183,7 +196,7 @@ public class ElementController {
                 i++;
             }
             ApiResultModel<Object> apiResultModel = ApiResultHelper.success(materials);
-            Pagination pagination = new Pagination(materials.size());
+            Pagination pagination = new Pagination(Constants.DEFAULT_PAGE_SIZE, materials.size());
             Map<String, Object> meta = new HashMap<>();
             meta.put("pagination", pagination);
             apiResultModel.setMeta(meta);

@@ -145,7 +145,17 @@ export default function usePageList({
       Object.keys(res.data.meta.pagination).forEach((key) => {
         pagination[key] = res.data.meta.pagination[key];
       });
-      pageData.value = [...pageData.value, ...list];
+      var elementMap = {};
+      pageData.value.forEach((item) => {
+        elementMap[item.name] = 1;
+      });
+
+      var filterList = list.filter((item) => {
+        return elementMap[item.name] === undefined;
+      });
+      elementMap = null;
+
+      pageData.value = [...pageData.value, ...filterList];
     } catch (error) {
       console.log(error);
     }

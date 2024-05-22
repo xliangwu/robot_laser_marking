@@ -35,12 +35,12 @@
 
   <Modal v-model="showStartMarkingWarningDialog" width="400">
     <template #header>
-      <p style="color: crimson; text-align: center">
-        <Icon type="ios-information-circle"></Icon>
+      <p style="text-align: left">
+        <Icon type="ios-information-circle-outline" color="#ed4014" size="16"></Icon>
         <span>下单通知</span>
       </p>
     </template>
-    <div style="text-align: center">
+    <div style="text-align: left">
       <h3>正在标刻中，请打标完成再下单。</h3>
     </div>
     <template #footer>
@@ -72,7 +72,7 @@ const { createTmplByCommon, updataTemplInfo, routerToId } = useMaterial();
 
 const { t } = useI18n();
 
-const { canvasEditor,mixinState } = useSelect();
+const { canvasEditor, mixinState } = useSelect();
 
 //data
 const showStartMarkingWarningDialog = ref(false);
@@ -148,7 +148,7 @@ const saveUserDesignerImage = () => {
 
   queryMarkingStatus()
     .then((res) => {
-      console.log("select:{}",mixinState.mSelectedConfigIndex);
+      console.log('select:{}', mixinState.mSelectedConfigIndex);
       if (res.status == 200 && res.data?.code == 0) {
         var markingStatus = res.data?.data;
         if (markingStatus == 1 || markingStatus == -1 || markingStatus == 2) {
@@ -170,11 +170,11 @@ const saveUserDesignerImage = () => {
 
 const confirmStartMarking = () => {
   var callback = function (imageData, type) {
-    console.log("select:{}",mixinState.mSelectedConfigIndex);
+    console.log('select:{}', mixinState.mSelectedConfigIndex);
     var request = {
       imageData: imageData,
       type: type,
-      productIndex:mixinState.mSelectedConfigIndex,
+      productIndex: mixinState.mSelectedConfigIndex,
     };
 
     startMarking(request).then((res) => {

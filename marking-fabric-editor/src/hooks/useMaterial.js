@@ -54,7 +54,7 @@ export default function useMaterial() {
     const fileInfo = await uploadFileToInfo();
     return {
       json,
-      img: fileInfo.id,
+      img: fileInfo?.id,
       desc: '',
     };
   };
