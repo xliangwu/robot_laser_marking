@@ -13,13 +13,13 @@
     </h3>
     <Form ref="formInline" inline :label-width="40">
       <FormItem label="宽度">
-        <InputNumber v-model="width" :min="1" placeholder="请输入"></InputNumber>
+        <InputNumber v-model="width" :min="1" placeholder="请输入" readonly></InputNumber>
       </FormItem>
       <FormItem label="高度">
-        <InputNumber v-model="height" :min="1" placeholder="请输入"></InputNumber>
+        <InputNumber v-model="height" :min="1" placeholder="请输入" readonly></InputNumber>
       </FormItem>
       <FormItem :label-width="0">
-        <Button type="primary" @click="customSizeCreate">
+        <Button type="primary" @click="customSizeCreate" >
           {{ $t('importFiles.createDesign.create') }}
         </Button>
       </FormItem>
@@ -34,7 +34,7 @@
         :label="`${item.width}x${item.height}${item.unit}`"
         :arrow="false"
         :key="item.name"
-        :name="`${item.width}x${item.height}x${item.unit}`"
+        :name="`${item.value}_${item.width}x${item.height}x${item.unit}`"
         v-for="item in sizeList"
       >
         <template #extra>
@@ -48,7 +48,7 @@
 <script name="ImportJson" setup>
 import useSelect from '@/hooks/select';
 import { Message } from 'view-ui-plus';
-const { canvasEditor } = useSelect();
+const { canvasEditor,mixinState } = useSelect();
 const emit = defineEmits(['set']);
 
 const props = defineProps({
@@ -61,6 +61,8 @@ const props = defineProps({
 const modal = ref(false);
 const width = ref(null);
 const height = ref(null);
+const selected_index = ref(1)
+
 const sizeList = ref([]);
 const showSetSize = (w, h) => {
   width.value = w || null;
@@ -72,9 +74,12 @@ const showSetSize = (w, h) => {
   modal.value = true;
 };
 const setSize = (itemString) => {
-  const [w, h] = itemString.split('x');
+  const [id,wh] = itemString.split('_');
+  selected_index.value = id;
+  const [w, h] = String(wh).split('x');
   width.value = Number(w);
   height.value = Number(h);
+  mixinState.mSelectedConfigIndex = id;
 };
 
 const customSizeCreate = async () => {

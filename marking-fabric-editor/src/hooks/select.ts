@@ -13,6 +13,7 @@ interface Selector {
   mSelectId: string | undefined;
   mSelectIds: (string | undefined)[];
   mSelectActive: unknown[];
+  mSelectedConfigIndex: number |undefined;
 }
 
 export default function useSelect() {

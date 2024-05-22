@@ -17,7 +17,7 @@
         <InputNumber disabled v-model="height" @on-change="setSize"></InputNumber>
       </FormItem>
     </Form>
-    <Button type="primary" @click="showSetSize">调整尺寸</Button>
+    <Button type="primary" @click="showSetSize">调整产品</Button>
 
     <!-- 修改尺寸 -->
     <modalSzie :title="$t('setSizeTip')" ref="modalSizeRef" @set="handleConfirm"></modalSzie>
@@ -66,6 +66,7 @@ const handleConfirm = (w, h) => {
 :deep(.ivu-form-item) {
   margin-bottom: 0;
 }
+
 :deep(.ivu-divider-plain) {
   &.ivu-divider-with-text-left {
     margin: 10px 0;

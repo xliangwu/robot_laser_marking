@@ -6,6 +6,8 @@ import com.caveup.lasr.entity.*;
 import com.caveup.lasr.result.ApiStatusCode;
 import com.caveup.lasr.result.helper.ApiResultHelper;
 import com.caveup.lasr.result.model.ApiResultModel;
+import com.caveup.lasr.util.QueryUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
-import java.nio.charset.Charset;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author xw80329
@@ -32,6 +35,8 @@ import java.util.*;
 @CrossOrigin
 public class ElementController {
 
+    private static final Map<String, String> MATERIAL_MAP = new ConcurrentHashMap<>();
+
     @Autowired
     private AppConfig appConfig;
 
@@ -40,7 +45,7 @@ public class ElementController {
     public ApiResultModel<Object> sizes() {
         try {
             File designerFile = new File(appConfig.getDesignerConfig());
-            String designerConfigContent = FileUtils.readFileToString(designerFile, Charset.defaultCharset());
+            String designerConfigContent = FileUtils.readFileToString(designerFile, "utf8");
             JSONArray data = JSONArray.parseArray(designerConfigContent);
             ApiResultModel<Object> apiResultModel = ApiResultHelper.success(data);
             Pagination pagination = new Pagination(data.size());
@@ -76,6 +81,7 @@ public class ElementController {
                 attributes.setUpdatedAt(new Date());
                 materialType.setAttributes(attributes);
                 materialTypeList.add(materialType);
+                MATERIAL_MAP.put(String.valueOf(materialType.getId()), attributes.getName());
             }
             ApiResultModel<Object> apiResultModel = ApiResultHelper.success(materialTypeList);
             Pagination pagination = new Pagination(materialTypeList.size());
@@ -112,8 +118,21 @@ public class ElementController {
     }
 
     @GetMapping("/materials")
-    public ApiResultModel<Object> materials() {
+    public ApiResultModel<Object> materials(HttpServletRequest request) {
+        log.info("request:{},query:{}", request.getRequestURI(), request.getQueryString());
         try {
+            Map<String, String> params = QueryUtil.parse(request.getQueryString());
+
+            AtomicReference<String> selectedType = new AtomicReference<>();
+            selectedType.set("all");
+            params.forEach((k, v) -> {
+                if (k.contains("material_type")) {
+                    selectedType.set(v);
+                }
+            });
+
+            log.info("material_type:{}", selectedType.get());
+            String categoryName = MATERIAL_MAP.getOrDefault(selectedType.get(), null);
             File materialFile = new File(appConfig.getMaterialRootDir());
             Collection<File> allImages = FileUtils.listFiles(materialFile, new String[]{"jpg", "png"}, true);
             Assert.notNull(allImages, String.format("%s should be non-empty", appConfig.getMaterialRootDir()));
@@ -121,6 +140,10 @@ public class ElementController {
             int i = 1;
             for (File file : allImages) {
                 if (file.isDirectory()) {
+                    continue;
+                }
+
+                if (null != categoryName && !file.getParent().endsWith(categoryName)) {
                     continue;
                 }
 

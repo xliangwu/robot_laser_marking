@@ -14,10 +14,10 @@
       {{ $t('save.empty') }}
     </Button>
 
-    <Button style="margin-left: 10px;" type="primary" @click="saveUserDesignerImage">
+    <Button style="margin-left: 10px" type="primary" @click="saveUserDesignerImage">
       {{ $t('save.copy_to_clipboardstr') }}
     </Button>
-    
+
     <!-- <Dropdown style="margin-left: 10px" @on-click="saveWith">
       <Button type="primary">
         {{ $t('save.down') }}
@@ -30,12 +30,33 @@
           <DropdownItem name="clipboardBase64">{{ $t('save.copy_to_clipboardstr') }}</DropdownItem>
         </DropdownMenu>
       </template>
-    </Dropdown> -->
+</Dropdown> -->
   </div>
+
+  <Modal v-model="showStartMarkingWarningDialog" width="400">
+    <template #header>
+      <p style="color: crimson; text-align: center">
+        <Icon type="ios-information-circle"></Icon>
+        <span>下单通知</span>
+      </p>
+    </template>
+    <div style="text-align: center">
+      <h3>正在标刻中，请打标完成再下单。</h3>
+    </div>
+    <template #footer>
+      <Button type="error" size="large" @click="closeMarkingWarningDialog">确定</Button>
+    </template>
+  </Modal>
+
+  <Modal v-model="showStartMarkingConfirmDialog" title="下单确认" @on-ok="confirmStartMarking">
+    <div style="text-align: left">
+      <h3>即将下单，请您确认下单。</h3>
+    </div>
+  </Modal>
 </template>
 
 <script setup name="save-bar">
-import { startMarking } from '@/api/user';
+import { startMarking, queryMarkingStatus } from '@/api/user';
 
 import { Modal } from 'view-ui-plus';
 import useSelect from '@/hooks/select';
@@ -51,7 +72,12 @@ const { createTmplByCommon, updataTemplInfo, routerToId } = useMaterial();
 
 const { t } = useI18n();
 
-const { canvasEditor } = useSelect();
+const { canvasEditor,mixinState } = useSelect();
+
+//data
+const showStartMarkingWarningDialog = ref(false);
+const showStartMarkingConfirmDialog = ref(false);
+
 const cbMap = {
   clipboard() {
     canvasEditor.clipboard();
@@ -65,6 +91,7 @@ const cbMap = {
   saveImg() {
     canvasEditor.saveImg();
   },
+
   clipboardBase64() {
     // canvasEditor.clipboardBase64();
     var callback = function (imageData, type) {
@@ -115,15 +142,57 @@ const beforeClear = () => {
 };
 
 const saveUserDesignerImage = () => {
-  // canvasEditor.clipboardBase64();
+  Spin.show({
+    render: (h) => h('h1', '正在查询设备状态，请耐心等待...'),
+  });
+
+  queryMarkingStatus()
+    .then((res) => {
+      console.log("select:{}",mixinState.mSelectedConfigIndex);
+      if (res.status == 200 && res.data?.code == 0) {
+        var markingStatus = res.data?.data;
+        if (markingStatus == 1 || markingStatus == -1 || markingStatus == 2) {
+          showStartMarkingWarningDialog.value = true;
+        } else if (markingStatus == 3 || markingStatus == 0) {
+          showStartMarkingConfirmDialog.value = true;
+        }
+      } else {
+        this.$Message['error']({
+          background: true,
+          content: '这是一条带背景色的通知',
+        });
+      }
+    })
+    .finally(() => {
+      Spin.hide();
+    });
+};
+
+const confirmStartMarking = () => {
   var callback = function (imageData, type) {
+    console.log("select:{}",mixinState.mSelectedConfigIndex);
     var request = {
       imageData: imageData,
       type: type,
+      productIndex:mixinState.mSelectedConfigIndex,
     };
-    startMarking(request);
+
+    startMarking(request).then((res) => {
+      console.log(res);
+      showStartMarkingConfirmDialog.value = false;
+      Message.success({
+        content: '下单成功',
+        duration: 5,
+        background: true,
+      });
+      canvasEditor.clear();
+    });
   };
   canvasEditor.saveLocal(callback);
+};
+
+const closeMarkingWarningDialog = () => {
+  showStartMarkingWarningDialog.value = false;
 };
 </script>
 

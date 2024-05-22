@@ -69,3 +69,7 @@ export const getTmplInfo = (data: any) => instance.get(`/api/user-templs/${data}
 
 //保存打标
 export const startMarking = (data: any) => instance.post('/laser/v1/marking', data);
+
+//保存打标
+export const queryMarkingStatus = (data: any) =>
+  instance.get(`/laser/v1/queryMarkingStatus?${data}`);

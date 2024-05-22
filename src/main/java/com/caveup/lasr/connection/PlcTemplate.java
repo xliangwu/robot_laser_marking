@@ -33,19 +33,22 @@ public class PlcTemplate implements InitializingBean {
         }
     }
 
-    public void writeInt(String a1, int val, String a2, int v2) {
+    public void writeInt(String a1, int val, String a2, int v2, String a3, int v3) {
         try {
             S7PLC s7Plc = new S7PLC(EPlcType.S1200, appConfig.getPlcHost());
             s7Plc.setEnableReconnect(true);
             s7Plc.setReceiveTimeout(1000);
             s7Plc.writeInt16(a1, (short) val);
             s7Plc.writeInt16(a2, (short) v2);
+            s7Plc.writeInt16(a3, (short) v3);
             int actualA1 = s7Plc.readInt16(a1);
             int actualA2 = s7Plc.readInt16(a2);
+            int actualA3 = s7Plc.readInt16(a3);
+
             s7Plc.close();
             log.info("finish to write db:{},data:{},actual:{}", a1, val, actualA1);
             log.info("finish to write db:{},data:{},actual:{}", a2, v2, actualA2);
-
+            log.info("finish to write db:{},data:{},actual:{}", a3, v3, actualA3);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
         }
