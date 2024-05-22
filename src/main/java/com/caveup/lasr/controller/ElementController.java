@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 /**
  * @author xw80329
@@ -82,6 +83,7 @@ public class ElementController {
                 materialType.setAttributes(attributes);
                 materialTypeList.add(materialType);
                 MATERIAL_MAP.put(String.valueOf(materialType.getId()), attributes.getName());
+                i++;
             }
             ApiResultModel<Object> apiResultModel = ApiResultHelper.success(materialTypeList);
             Pagination pagination = new Pagination(materialTypeList.size());
@@ -134,7 +136,10 @@ public class ElementController {
             log.info("material_type:{}", selectedType.get());
             String categoryName = MATERIAL_MAP.getOrDefault(selectedType.get(), null);
             File materialFile = new File(appConfig.getMaterialRootDir());
-            Collection<File> allImages = FileUtils.listFiles(materialFile, new String[]{"jpg", "png"}, true);
+            Collection<File> allImages = FileUtils.listFiles(materialFile, new String[]{"jpg", "png"}, true)
+                    .stream()
+                    .sorted((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.getName(), b.getName())).collect(Collectors.toList());
+
             Assert.notNull(allImages, String.format("%s should be non-empty", appConfig.getMaterialRootDir()));
             List<Material> materials = new ArrayList<>();
             int i = 1;
@@ -162,7 +167,6 @@ public class ElementController {
                 imgAttributes.setPublishedAt(new Date());
                 materialDetail.setAttributes(imgAttributes);
                 materialDetail.setId(material.getId());
-                material.setId(material.getId());
 
                 Map<String, Object> img = new HashMap<>();
                 img.put("data", materialDetail);
@@ -176,6 +180,7 @@ public class ElementController {
 
                 material.setAttributes(attributes);
                 materials.add(material);
+                i++;
             }
             ApiResultModel<Object> apiResultModel = ApiResultHelper.success(materials);
             Pagination pagination = new Pagination(materials.size());
