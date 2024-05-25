@@ -113,6 +113,32 @@
       </div>
     </div>
 
+    <div v-show="mixinState.mSelectOneType === 'path'">
+      <Divider plain orientation="left">手写</Divider>
+      <Row :gutter="24">
+        <Col flex="1">
+          <div class="ivu-col__box">
+            <span class="label">{{ $t('color') }}</span>
+            <div class="content">
+              <ColorPicker disabled v-model="baseAttr.stroke" alpha />
+            </div>
+          </div>
+        </Col>
+      </Row>
+      <div class="flex-view">
+        <div class="flex-item">
+          <span class="label">宽度</span>
+          <div class="content slider-box">
+            <Slider
+              v-model="baseAttr.strokeWidth"
+              :max="64"
+              :min="2"
+              @on-input="(value) => changeCommon('handLineWidth', value)"
+            ></Slider>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- 通用属性 -->
     <div v-show="baseType.includes(mixinState.mSelectOneType)">
       <Divider plain orientation="left">{{ $t('attributes.exterior') }}</Divider>
@@ -131,6 +157,7 @@
       <!-- 颜色 -->
       <colorSelector
         :color="baseAttr.fill"
+        hidden
         @change="(value) => changeCommon('fill', value)"
       ></colorSelector>
       <Row :gutter="12">
@@ -181,6 +208,7 @@
             <span class="label">{{ $t('color') }}</span>
             <div class="content">
               <ColorPicker
+                disabled
                 v-model="baseAttr.stroke"
                 @on-change="(value) => changeCommon('stroke', value)"
                 alpha
@@ -261,7 +289,7 @@
     </div>
 
     <!-- ID属性 -->
-    <div>
+    <div hidden>
       <Divider plain orientation="left">{{ $t('attributes.id') }}</Divider>
       <div class="flex-view">
         <div class="flex-item">
@@ -321,6 +349,7 @@ const baseType = [
   'line',
   'arrow',
   'thinTailArrow',
+  'handLine',
 ];
 // 文字元素
 const textType = ['i-text', 'textbox', 'text'];
@@ -333,6 +362,7 @@ const baseAttr = reactive({
   left: 0,
   top: 0,
   strokeWidth: 0,
+  handLineWidth: 1,
   strokeDashArray: [],
   stroke: '#fff',
   shadow: {
@@ -516,6 +546,12 @@ const changeCommon = (key, value) => {
   // 旋转角度适配
   if (key === 'angle') {
     activeObject.rotate(value);
+    canvasEditor.canvas.renderAll();
+    return;
+  }
+
+  if (key == 'handLineWidth') {
+    activeObject && activeObject.set('strokeWidth', value);
     canvasEditor.canvas.renderAll();
     return;
   }

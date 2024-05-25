@@ -6,8 +6,8 @@ import lombok.Data;
  * @author xueliang.wu
  */
 @Data
-public class MaterialDetail {
+public class FontElement {
 
     private Integer id;
-    private ImgAttributes attributes;
+    private FontAttribute attributes;
 }

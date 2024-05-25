@@ -10,6 +10,7 @@
   "placeholder": "请输入",
   "common_elements": "基础要素",
   "draw_elements": "绘制元素",
+  "hand_draw_elements": "手绘元素",
   "color_macthing": "配色",
   "background_texture": "背景纹理",
   "picture": "图片",

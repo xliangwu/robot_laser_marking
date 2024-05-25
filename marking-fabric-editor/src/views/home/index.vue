@@ -18,7 +18,12 @@
         <myTemplName></myTemplName>
         <!-- 标尺开关 -->
         <Tooltip :content="$t('grid')">
-          <iSwitch v-model="state.ruler" @on-change="rulerSwitch" size="small" class="switch"></iSwitch>
+          <iSwitch
+            v-model="state.ruler"
+            @on-change="rulerSwitch"
+            size="small"
+            class="switch"
+          ></iSwitch>
         </Tooltip>
         <Divider type="vertical" />
         <history></history>
@@ -37,8 +42,8 @@
           <!-- 左侧菜单 -->
           <Menu :active-name="menuActive" accordion @on-select="showToolsBar" width="65px">
             <MenuItem v-for="item in leftBar" :key="item.key" :name="item.key" class="menu-item">
-            <Icon :type="item.icon" size="24" />
-            <div>{{ item.name }}</div>
+              <Icon :type="item.icon" size="24" />
+              <div>{{ item.name }}</div>
             </MenuItem>
           </Menu>
           <!-- 左侧组件 -->
@@ -50,7 +55,10 @@
             </div>
           </div>
           <!-- 关闭按钮 -->
-          <div :class="`close-btn left-btn ${state.toolsBarShow && 'left-btn-open'}`" @click="hideToolsBar"></div>
+          <div
+            :class="`close-btn left-btn ${state.toolsBarShow && 'left-btn-open'}`"
+            @click="hideToolsBar"
+          ></div>
         </div>
 
         <!-- 画布区域 -->
@@ -90,7 +98,10 @@
           <attribute v-if="state.show"></attribute>
         </div>
         <!-- 右侧关闭按钮 -->
-        <div :class="`close-btn right-btn ${state.attrBarShow && 'right-btn-open'}`" @click="switchAttrBar"></div>
+        <div
+          :class="`close-btn right-btn ${state.attrBarShow && 'right-btn-open'}`"
+          @click="switchAttrBar"
+        ></div>
       </Content>
     </Layout>
   </div>
@@ -175,7 +186,7 @@ const state = reactive({
   menuActive: 1,
   show: false,
   toolsBarShow: true,
-  attrBarShow: false,
+  attrBarShow: true,
   select: null,
   ruler: true,
 });
@@ -218,6 +229,7 @@ onMounted(() => {
     controlsAboveOverlay: true, // 超出clipPath后仍然展示控制条
     imageSmoothingEnabled: false, // 解决文字导出后不清晰问题
     preserveObjectStacking: true, // 当选择画布中的对象时，让对象不在顶层。
+    isDrawingMode: false,
   });
 
   // 初始化编辑器
@@ -252,6 +264,8 @@ onMounted(() => {
   if (state.ruler) {
     canvasEditor.rulerEnable();
   }
+  //设置默认线条宽度
+  canvas.freeDrawingBrush.width = 10;
 });
 
 onUnmounted(() => canvasEditor.destory());

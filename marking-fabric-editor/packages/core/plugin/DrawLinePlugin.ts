@@ -60,6 +60,9 @@ class DrawLinePlugin {
         case 'line':
           NodeHandler = fabric.Line;
           break;
+        case 'handLine':
+          NodeHandler = fabric.Line;
+          break;
         case 'arrow':
           NodeHandler = Arrow;
           break;
@@ -67,8 +70,8 @@ class DrawLinePlugin {
           NodeHandler = ThinTailArrow;
           opts = {
             strokeWidth: 2,
-            stroke: '#ff0000',
-            fill: '#ff0000',
+            stroke: '#000000',
+            fill: '#000000',
             id: uuid(),
           };
           break;

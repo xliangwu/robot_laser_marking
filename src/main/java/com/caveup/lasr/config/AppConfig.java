@@ -49,4 +49,7 @@ public class AppConfig {
 
     @Value("${materialRootDir:/data/laser/material}")
     private String materialRootDir;
+
+    @Value("${materialRootDir:/data/laser/fonts}")
+    private String fontRootDir;
 }

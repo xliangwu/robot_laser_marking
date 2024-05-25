@@ -49,6 +49,7 @@ public enum ApiStatusCode {
     PARAM_ERROR(5000, "必选参数为空"),
     UPGRADE_ERROR(5001, "当前设备正在升级,请等待升级完成再升级。"),
     UPGRADE_DOWNLOAD_FILE_ERROR(5002, "下载安装包失败"),
+    CONFIG_ERROR(5003, "项目配置不正确"),
 
     EMPTY_DATA(6000, "结果为空"),
     MARKING_ERROR(5002, "打标数据发送失败"),
