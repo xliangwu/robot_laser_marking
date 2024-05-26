@@ -277,6 +277,10 @@ public class ElementController {
                     continue;
                 }
 
+                if (file.isHidden()) {
+                    continue;
+                }
+
                 Material material = new Material();
                 material.setId(i + 1);
 
